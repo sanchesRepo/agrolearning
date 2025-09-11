@@ -1,0 +1,412 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* AgroLearn Theme - Baseado no logo */
+  --background: oklch(0.99 0.005 120); /* #fefffe - Branco levemente esverdeado */
+  --foreground: oklch(0.35 0.08 140); /* #2d4a3e - Verde escuro do logo */
+  --card: oklch(0.97 0.01 120); /* #f8fdf9 - Card com leve tom verde */
+  --card-foreground: oklch(0.35 0.08 140); /* #2d4a3e - Verde escuro */
+  --popover: oklch(0.99 0.005 120); /* #fefffe */
+  --popover-foreground: oklch(0.35 0.08 140); /* #2d4a3e */
+  --primary: oklch(0.55 0.15 145); /* #22a55f - Verde do "AGRO" */
+  --primary-foreground: oklch(1 0 0); /* #ffffff */
+  --secondary: oklch(0.48 0.12 145); /* #4a8c5f - Verde secundário */
+  --secondary-foreground: oklch(0.96 0.015 130); /* #f3f8f4 - Verde claro */
+  --muted: oklch(0.96 0.015 130); /* #f3f8f4 - Cinza esverdeado claro */
+  --muted-foreground: oklch(0.5 0.05 140); /* #5a6b5e - Verde acinzentado */
+  --accent: oklch(0.42 0.1 145); /* #3d7a52 - Verde accent escuro */
+  --accent-foreground: oklch(0.96 0.015 130); /* #f3f8f4 - Verde claro */
+  --destructive: oklch(0.6 0.2 25); /* #ef4444 - Mantido */
+  --destructive-foreground: oklch(1 0 0); /* #ffffff */
+  --border: oklch(0.88 0.02 130); /* #d1e0d5 - Borda verde clara */
+  --input: oklch(0.97 0.01 120); /* #f8fdf9 */
+  --ring: oklch(0.55 0.15 145 / 0.4); /* Verde com transparência */
+  --chart-1: oklch(0.55 0.15 145); /* #22a55f - Verde */
+  --chart-2: oklch(0.75 0.18 85); /* #f4c430 - Dourado */
+  --chart-3: oklch(0.45 0.05 140); /* #4a5a4e - Verde médio */
+  --chart-4: oklch(0.6 0.08 140); /* #6b7a6f - Verde acinzentado */
+  --chart-5: oklch(0.85 0.03 130); /* #e8f1ea - Verde muito claro */
+  --radius: 0.5rem;
+  --sidebar: oklch(0.32 0.08 155); /* #2d4a34 - Verde militar/florestal mais fechado */
+  --sidebar-foreground: oklch(0.98 0.005 130); /* #fcfdfc - Branco quase puro */
+  --sidebar-primary: oklch(0.36 0.07 155); /* #334d3a - Fundo dos itens verde militar */
+  --sidebar-primary-foreground: oklch(0.98 0.005 130); /* #fcfdfc - Branco */
+  --sidebar-accent: oklch(0.45 0.10 155); /* #3e5c47 - Verde accent militar para hover */
+  --sidebar-accent-foreground: oklch(0.98 0.005 130); /* #fcfdfc - Branco */
+  --sidebar-border: oklch(0.28 0.06 155); /* #283d2e - Borda verde militar escura */
+  --sidebar-ring: oklch(0.45 0.10 155 / 0.4); /* Verde militar com transparência */
+}
+
+.dark {
+  /* AgroLearn Dark Theme */
+  --background: oklch(0.12 0.02 135); /* #1a2b1f - Verde escuro */
+  --foreground: oklch(0.9 0.02 130); /* #e8f1ea - Verde claro */
+  --card: oklch(0.16 0.03 135); /* #233028 - Verde escuro para cards */
+  --card-foreground: oklch(0.9 0.02 130); /* #e8f1ea */
+  --popover: oklch(0.12 0.02 135); /* #1a2b1f */
+  --popover-foreground: oklch(0.9 0.02 130); /* #e8f1ea */
+  --primary: oklch(0.65 0.18 145); /* #4ade80 - Verde mais claro */
+  --primary-foreground: oklch(0.15 0.05 140); /* #1f3329 */
+  --secondary: oklch(0.55 0.15 145); /* #4ade80 - Verde secundário mais claro */
+  --secondary-foreground: oklch(0.12 0.02 135); /* #1a2b1f - Verde escuro */
+  --muted: oklch(0.18 0.03 135); /* #273a2c - Verde escuro muted */
+  --muted-foreground: oklch(0.7 0.05 140); /* #a1b5a6 - Verde claro muted */
+  --accent: oklch(0.48 0.12 145); /* #4a8c5f - Verde accent mais escuro */
+  --accent-foreground: oklch(0.9 0.02 130); /* #e8f1ea - Verde claro */
+  --destructive: oklch(0.55 0.2 25); /* #dc2626 - Vermelho escuro */
+  --destructive-foreground: oklch(0.9 0.02 130); /* #e8f1ea */
+  --border: oklch(0.25 0.04 135); /* #3d4f42 - Borda verde escura */
+  --input: oklch(0.16 0.03 135); /* #233028 */
+  --ring: oklch(0.65 0.18 145 / 0.4); /* Verde com transparência */
+  --chart-1: oklch(0.65 0.18 145); /* #4ade80 - Verde */
+  --chart-2: oklch(0.75 0.18 85); /* #f4c430 - Dourado */
+  --chart-3: oklch(0.5 0.08 140); /* #6b8470 - Verde médio */
+  --chart-4: oklch(0.6 0.1 140); /* #7a9580 - Verde acinzentado */
+  --chart-5: oklch(0.3 0.05 135); /* #42594a - Verde escuro */
+  --sidebar: oklch(0.06 0.042 135); /* #111f15 - Sidebar verde muito mais escura mas saturada */
+  --sidebar-foreground: oklch(0.92 0.025 130); /* #e1ece4 - Verde claro mais suave */
+  --sidebar-primary: oklch(0.12 0.055 135); /* #1d2a22 - Fundo dos itens mais escuro */
+  --sidebar-primary-foreground: oklch(0.72 0.19 145); /* #5ceb95 - Verde mais vibrante */
+  --sidebar-accent: oklch(0.46 0.13 145); /* #46875d - Verde accent mais saturado */
+  --sidebar-accent-foreground: oklch(0.92 0.022 130); /* #e1ece4 - Verde claro */
+  --sidebar-border: oklch(0.16 0.055 135); /* #253529 - Borda mais contrastante */
+  --sidebar-ring: oklch(0.72 0.19 145 / 0.4); /* Verde mais vibrante com transparência */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* Estilos customizados para melhorar o contraste da sidebar */
+.sidebar-enhanced {
+  background: linear-gradient(180deg, 
+    oklch(0.32 0.08 155) 0%, 
+    oklch(0.29 0.09 155) 100%
+  );
+  border-right: 1px solid oklch(0.28 0.06 155);
+  box-shadow: 2px 0 8px oklch(0.15 0.05 155 / 0.18);
+}
+
+.dark .sidebar-enhanced {
+  background: linear-gradient(180deg, 
+    oklch(0.06 0.042 135) 0%, 
+    oklch(0.04 0.045 135) 100%
+  );
+  border-right: 1px solid oklch(0.16 0.055 135);
+  box-shadow: 2px 0 12px oklch(0.02 0.03 135 / 0.5);
+}
+
+/* Melhorar os itens ativos da sidebar */
+[data-active="true"] {
+  background: linear-gradient(90deg, 
+    oklch(0.50 0.12 155) 0%, 
+    oklch(0.47 0.13 155) 100%
+  ) !important;
+  border-left: 3px solid oklch(0.55 0.15 155);
+  font-weight: 600;
+  color: oklch(0.98 0.005 130) !important;
+  box-shadow: inset 0 1px 2px oklch(0.40 0.10 155 / 0.35);
+}
+
+.dark [data-active="true"] {
+  background: linear-gradient(90deg, 
+    oklch(0.22 0.10 145) 0%, 
+    oklch(0.25 0.12 145) 100%
+  ) !important;
+  border-left: 3px solid oklch(0.32 0.14 145);
+  color: oklch(1 0 0) !important;
+  box-shadow: inset 0 1px 2px oklch(0.12 0.06 145 / 0.35);
+}
+
+/* Efeitos de hover melhorados */
+[data-slot="sidebar-menu-button"]:hover:not([data-active="true"]),
+[data-slot="sidebar-menu-sub-button"]:hover:not([data-active="true"]) {
+  background: linear-gradient(90deg, 
+    oklch(0.42 0.09 155) 0%, 
+    oklch(0.39 0.10 155) 100%
+  ) !important;
+  color: oklch(0.98 0.005 130) !important;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+}
+
+.dark [data-slot="sidebar-menu-button"]:hover:not([data-active="true"]),
+.dark [data-slot="sidebar-menu-sub-button"]:hover:not([data-active="true"]) {
+  background: linear-gradient(90deg, 
+    oklch(0.28 0.10 145) 0%, 
+    oklch(0.31 0.12 145) 100%
+  ) !important;
+  color: oklch(1 0 0) !important;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+}
+
+/* Progress indicators com verde militar */
+.sidebar-enhanced .bg-secondary {
+  background: oklch(0.52 0.12 155) !important;
+}
+
+.dark .sidebar-enhanced .bg-secondary {
+  background: oklch(0.57 0.16 145) !important;
+}
+
+/* Garantir que ícones e elementos filhos fiquem brancos no hover e ativo */
+[data-active="true"] svg,
+[data-active="true"] span,
+[data-active="true"] .h-4,
+[data-active="true"] .w-4 {
+  color: oklch(1 0 0) !important;
+}
+
+[data-slot="sidebar-menu-button"]:hover:not([data-active="true"]) svg,
+[data-slot="sidebar-menu-button"]:hover:not([data-active="true"]) span,
+[data-slot="sidebar-menu-sub-button"]:hover:not([data-active="true"]) svg,
+[data-slot="sidebar-menu-sub-button"]:hover:not([data-active="true"]) span {
+  color: oklch(1 0 0) !important;
+  transition: color 0.2s ease;
+}
+
+/* Manter os progress indicators visíveis no hover e ativo */
+[data-active="true"] [data-slot="progress-badge"],
+[data-active="true"] [class*="progress"],
+[data-slot="sidebar-menu-button"]:hover:not([data-active="true"]) [data-slot="progress-badge"],
+[data-slot="sidebar-menu-button"]:hover:not([data-active="true"]) [class*="progress"],
+[data-slot="sidebar-menu-sub-button"]:hover:not([data-active="true"]) [data-slot="progress-badge"],
+[data-slot="sidebar-menu-sub-button"]:hover:not([data-active="true"]) [class*="progress"] {
+  opacity: 0.9;
+  filter: brightness(1.1);
+}
+
+/* Estilos específicos para o logo da sidebar */
+.sidebar-enhanced [data-slot="sidebar-header"] {
+  border-bottom: 1px solid oklch(0.28 0.06 155 / 0.9);
+  background: linear-gradient(180deg, 
+    oklch(0.34 0.07 155) 0%, 
+    oklch(0.32 0.08 155) 100%
+  );
+}
+
+.dark .sidebar-enhanced [data-slot="sidebar-header"] {
+  border-bottom: 1px solid oklch(0.16 0.055 135 / 0.7);
+  background: linear-gradient(180deg, 
+    oklch(0.08 0.038 135) 0%, 
+    oklch(0.06 0.042 135) 100%
+  );
+}
+
+/* Logo container otimizado */
+.sidebar-enhanced [data-slot="sidebar-header"] img {
+  transition: transform 0.3s ease, filter 0.3s ease;
+  filter: drop-shadow(0 1px 3px oklch(0.5 0.1 125 / 0.1));
+}
+
+.sidebar-enhanced [data-slot="sidebar-header"] img:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 2px 6px oklch(0.5 0.1 125 / 0.15));
+}
+
+.dark .sidebar-enhanced [data-slot="sidebar-header"] img {
+  filter: drop-shadow(0 1px 3px oklch(0.05 0.02 135 / 0.2));
+}
+
+.dark .sidebar-enhanced [data-slot="sidebar-header"] img:hover {
+  filter: drop-shadow(0 2px 6px oklch(0.05 0.02 135 / 0.3));
+}
+
+/* Estilos específicos para o SVG do texto logo */
+.sidebar-enhanced [data-slot="sidebar-header"] img[src="/texto-logo.svg"] {
+  filter: drop-shadow(0 1px 2px oklch(0.15 0.05 155 / 0.3));
+  transition: filter 0.3s ease, transform 0.3s ease;
+  max-height: 2rem;
+  width: auto;
+}
+
+.sidebar-enhanced [data-slot="sidebar-header"] img[src="/texto-logo.svg"]:hover {
+  transform: scale(1.02);
+  filter: drop-shadow(0 2px 4px oklch(0.15 0.05 155 / 0.4));
+}
+
+.dark .sidebar-enhanced [data-slot="sidebar-header"] img[src="/texto-logo.svg"] {
+  filter: drop-shadow(0 1px 2px oklch(0.05 0.02 135 / 0.4));
+}
+
+.dark .sidebar-enhanced [data-slot="sidebar-header"] img[src="/texto-logo.svg"]:hover {
+  filter: drop-shadow(0 2px 4px oklch(0.05 0.02 135 / 0.5));
+}
+
+/* Forçar texto branco em todos os elementos da sidebar no tema claro */
+.sidebar-enhanced [data-sidebar="header"] span,
+.sidebar-enhanced [data-sidebar="group-label"],
+.sidebar-enhanced [data-sidebar="menu-button"] span,
+.sidebar-enhanced [data-sidebar="menu-sub-button"] span,
+.sidebar-enhanced [data-slot="sidebar-header"] span,
+.sidebar-enhanced .text-muted-foreground {
+  color: oklch(0.98 0.005 130) !important;
+}
+
+/* Garantir que os ícones também fiquem claros */
+.sidebar-enhanced svg {
+  color: oklch(0.98 0.005 130) !important;
+}
+
+/* Manter cores específicas do tema escuro */
+.dark .sidebar-enhanced [data-sidebar="header"] span,
+.dark .sidebar-enhanced [data-sidebar="group-label"],
+.dark .sidebar-enhanced [data-sidebar="menu-button"] span,
+.dark .sidebar-enhanced [data-sidebar="menu-sub-button"] span,
+.dark .sidebar-enhanced [data-slot="sidebar-header"] span {
+  color: oklch(0.92 0.025 130) !important;
+}
+
+/* Scrollbar customizada para sidebar - tema claro */
+.sidebar-enhanced,
+.sidebar-enhanced [data-sidebar="content"],
+.sidebar-enhanced [data-slot="sidebar-content"] {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.45 0.10 155 / 0.6) oklch(0.32 0.08 155);
+}
+
+.sidebar-enhanced::-webkit-scrollbar,
+.sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar,
+.sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-enhanced::-webkit-scrollbar-track,
+.sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar-track,
+.sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar-track {
+  background: oklch(0.32 0.08 155);
+  border-radius: 3px;
+}
+
+.sidebar-enhanced::-webkit-scrollbar-thumb,
+.sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar-thumb,
+.sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar-thumb {
+  background: oklch(0.45 0.10 155 / 0.6);
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-enhanced::-webkit-scrollbar-thumb:hover,
+.sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar-thumb:hover,
+.sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.50 0.12 155 / 0.8);
+}
+
+.sidebar-enhanced::-webkit-scrollbar-corner,
+.sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar-corner,
+.sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar-corner {
+  background: oklch(0.32 0.08 155);
+}
+
+/* Scrollbar para tema escuro */
+.dark .sidebar-enhanced,
+.dark .sidebar-enhanced [data-sidebar="content"],
+.dark .sidebar-enhanced [data-slot="sidebar-content"] {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.25 0.08 145 / 0.7) oklch(0.06 0.042 135);
+}
+
+.dark .sidebar-enhanced::-webkit-scrollbar-track,
+.dark .sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar-track,
+.dark .sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar-track {
+  background: oklch(0.06 0.042 135);
+}
+
+.dark .sidebar-enhanced::-webkit-scrollbar-thumb,
+.dark .sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar-thumb,
+.dark .sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar-thumb {
+  background: oklch(0.25 0.08 145 / 0.7);
+}
+
+.dark .sidebar-enhanced::-webkit-scrollbar-thumb:hover,
+.dark .sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar-thumb:hover,
+.dark .sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.30 0.10 145 / 0.9);
+}
+
+/* Scrollbar ainda mais minimalista - aparece só no hover */
+.sidebar-enhanced::-webkit-scrollbar-thumb,
+.sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar-thumb,
+.sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar-thumb {
+  opacity: 0.4;
+  transition: opacity 0.3s ease, background-color 0.2s ease;
+}
+
+.sidebar-enhanced:hover::-webkit-scrollbar-thumb,
+.sidebar-enhanced:hover [data-sidebar="content"]::-webkit-scrollbar-thumb,
+.sidebar-enhanced:hover [data-slot="sidebar-content"]::-webkit-scrollbar-thumb {
+  opacity: 0.8;
+}
+
+.sidebar-enhanced::-webkit-scrollbar-thumb:hover,
+.sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar-thumb:hover,
+.sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar-thumb:hover {
+  opacity: 1 !important;
+}
+
+/* Aplicar para tema escuro também */
+.dark .sidebar-enhanced::-webkit-scrollbar-thumb,
+.dark .sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar-thumb,
+.dark .sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar-thumb {
+  opacity: 0.5;
+}
+
+.dark .sidebar-enhanced:hover::-webkit-scrollbar-thumb,
+.dark .sidebar-enhanced:hover [data-sidebar="content"]::-webkit-scrollbar-thumb,
+.dark .sidebar-enhanced:hover [data-slot="sidebar-content"]::-webkit-scrollbar-thumb {
+  opacity: 0.8;
+}
+
+.dark .sidebar-enhanced::-webkit-scrollbar-thumb:hover,
+.dark .sidebar-enhanced [data-sidebar="content"]::-webkit-scrollbar-thumb:hover,
+.dark .sidebar-enhanced [data-slot="sidebar-content"]::-webkit-scrollbar-thumb:hover {
+  opacity: 1 !important;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
