@@ -10,7 +10,7 @@ echo "🚀 Iniciando deploy do AgroLearning..."
 # Definir variáveis
 APP_NAME="agrolearning"
 APP_DIR="/var/www/$APP_NAME"
-REPO_URL="https://github.com/SEU_USUARIO/agrolearning.git"  # Substitua pelo seu repo
+REPO_URL="https://github.com/sanchesRepo/agrolearning.git"  # Substitua pelo seu repo
 NGINX_CONFIG="/etc/nginx/sites-available/$APP_NAME"
 DOMAIN="185.187.169.198"  # Pode ser substituído pelo seu domínio
 
