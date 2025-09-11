@@ -30,7 +30,7 @@ fi
 if ! git remote get-url origin > /dev/null 2>&1; then
     echo "❌ Remote 'origin' não configurado!"
     echo "Configure seu repositório GitHub primeiro:"
-    echo "git remote add origin https://github.com/SEU_USUARIO/$REPO_NAME.git"
+    echo "git remote add origin https://github.com/sanchesRepo/$REPO_NAME.git"
     exit 1
 fi
 
