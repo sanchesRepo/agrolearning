@@ -26,6 +26,7 @@ export function UploadContent() {
   const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null)
 
   const subSubjects = selectedSubject ? getSubSubjectsBySubject(selectedSubject) : []
   const modules = selectedSubject && selectedSubSubject 
@@ -102,11 +103,12 @@ export function UploadContent() {
     setSelectedFiles(prev => prev.filter(f => f.id !== id))
   }
 
-  // Upload files
+  // Upload files with progress tracking
   const handleUpload = async () => {
     if (!canUpload) return
 
     setIsUploading(true)
+    const startTime = Date.now()
 
     const formData = new FormData()
     formData.append('subject', selectedSubject)
@@ -115,7 +117,7 @@ export function UploadContent() {
 
     // Update files to uploading status
     setSelectedFiles(prev => prev.map(f => 
-      f.status === 'ready' ? { ...f, status: 'uploading' as const } : f
+      f.status === 'ready' ? { ...f, status: 'uploading' as const, progress: 0 } : f
     ))
 
     try {
@@ -126,13 +128,28 @@ export function UploadContent() {
         formData.append('videos', fileObj.file)
       })
 
+      // Simulate progress for better UX (since we can't track real progress with FormData)
+      const progressInterval = setInterval(() => {
+        setSelectedFiles(prev => prev.map(f => {
+          if (f.status === 'uploading' && f.progress < 95) {
+            // Simulate realistic upload progress
+            const increment = Math.random() * 15 + 5 // 5-20% increments
+            return { ...f, progress: Math.min(95, f.progress + increment) }
+          }
+          return f
+        }))
+      }, 1000)
+
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       })
 
+      clearInterval(progressInterval)
+
       if (!response.ok) {
-        throw new Error('Erro no upload')
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }))
+        throw new Error(errorData.error || 'Erro no upload')
       }
 
       const result = await response.json()
@@ -142,10 +159,14 @@ export function UploadContent() {
         f.status === 'uploading' ? { ...f, status: 'success' as const, progress: 100 } : f
       ))
 
-      // Optional: Clear files after success
+      // Show success message
+      setUploadSuccess(result.message || `${validFiles.length} arquivos enviados com sucesso!`)
+
+      // Clear success message and files after delay
       setTimeout(() => {
+        setUploadSuccess(null)
         setSelectedFiles([])
-      }, 3000)
+      }, 8000)
 
     } catch (error) {
       // Update files to error status
@@ -153,7 +174,7 @@ export function UploadContent() {
         f.status === 'uploading' ? { 
           ...f, 
           status: 'error' as const, 
-          error: 'Erro no upload' 
+          error: error instanceof Error ? error.message : 'Erro no upload' 
         } : f
       ))
     } finally {
@@ -163,6 +184,16 @@ export function UploadContent() {
 
   return (
     <div className="space-y-6">
+      {/* Success Message */}
+      {uploadSuccess && (
+        <Alert className="border-green-200 bg-green-50">
+          <CheckCircle className="h-4 w-4 text-green-600" />
+          <AlertDescription className="text-green-800 font-medium">
+            {uploadSuccess}
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Classification Selectors */}
       <Card>
         <CardHeader>
@@ -318,29 +349,60 @@ export function UploadContent() {
                 {selectedFiles.map((fileObj) => (
                   <div
                     key={fileObj.id}
-                    className="flex items-center gap-3 p-3 border rounded-lg"
+                    className={cn(
+                      "flex items-center gap-3 p-3 border rounded-lg transition-all",
+                      fileObj.status === 'success' && "bg-green-50 border-green-200",
+                      fileObj.status === 'error' && "bg-red-50 border-red-200",
+                      fileObj.status === 'uploading' && "bg-blue-50 border-blue-200"
+                    )}
                   >
-                    <FileVideo className="h-5 w-5 text-muted-foreground" />
+                    <FileVideo className={cn(
+                      "h-5 w-5",
+                      fileObj.status === 'success' && "text-green-600",
+                      fileObj.status === 'error' && "text-red-600",
+                      fileObj.status === 'uploading' && "text-blue-600",
+                      fileObj.status === 'ready' && "text-muted-foreground"
+                    )} />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{fileObj.file.name}</p>
                       <p className="text-xs text-muted-foreground">
                         {(fileObj.file.size / 1024 / 1024).toFixed(2)} MB
                       </p>
+                      
+                      {/* Progress bar for uploading files */}
                       {fileObj.status === 'uploading' && (
-                        <Progress value={fileObj.progress} className="mt-1" />
+                        <div className="mt-2 space-y-1">
+                          <div className="flex justify-between text-xs">
+                            <span className="text-blue-600">Enviando...</span>
+                            <span className="text-blue-600">{Math.round(fileObj.progress)}%</span>
+                          </div>
+                          <Progress value={fileObj.progress} className="h-2" />
+                        </div>
                       )}
+                      
+                      {/* Success message */}
+                      {fileObj.status === 'success' && (
+                        <p className="text-xs text-green-600 mt-1 font-medium">✓ Upload concluído</p>
+                      )}
+                      
+                      {/* Error message */}
                       {fileObj.error && (
-                        <p className="text-xs text-destructive mt-1">{fileObj.error}</p>
+                        <p className="text-xs text-destructive mt-1 font-medium">
+                          ✗ {fileObj.error}
+                        </p>
                       )}
                     </div>
                     <div className="flex items-center gap-2">
                       {fileObj.status === 'success' && (
-                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <CheckCircle className="h-5 w-5 text-green-500" />
                       )}
                       {fileObj.status === 'error' && (
-                        <AlertCircle className="h-4 w-4 text-destructive" />
+                        <AlertCircle className="h-5 w-5 text-destructive" />
                       )}
-                      {!isUploading && (
+                      {fileObj.status === 'uploading' && (
+                        <div className="h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                      )}
+                      {!isUploading && fileObj.status !== 'success' && (
                         <Button
                           variant="ghost"
                           size="sm"
@@ -356,14 +418,53 @@ export function UploadContent() {
             </div>
           )}
 
+          {/* Overall Progress */}
+          {isUploading && (
+            <div className="space-y-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-blue-900">Progresso Geral</span>
+                <span className="text-sm text-blue-700">
+                  {selectedFiles.filter(f => f.status === 'success').length} de {selectedFiles.filter(f => f.status !== 'error').length} arquivos
+                </span>
+              </div>
+              <Progress 
+                value={
+                  selectedFiles.length > 0 
+                    ? (selectedFiles.reduce((acc, f) => acc + f.progress, 0) / selectedFiles.length)
+                    : 0
+                } 
+                className="h-2"
+              />
+              <p className="text-xs text-blue-600">
+                {selectedFiles.some(f => f.status === 'uploading') 
+                  ? "Upload em andamento... Por favor, não feche esta página."
+                  : "Processando arquivos..."
+                }
+              </p>
+            </div>
+          )}
+
           {/* Upload Button */}
           <div className="flex justify-end">
             <Button
               onClick={handleUpload}
               disabled={!canUpload}
               size="lg"
+              className={cn(
+                isUploading && "cursor-not-allowed opacity-75"
+              )}
             >
-              {isUploading ? "Enviando..." : "Fazer Upload"}
+              {isUploading ? (
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Enviando...
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Upload className="h-4 w-4" />
+                  Fazer Upload
+                </div>
+              )}
             </Button>
           </div>
 
