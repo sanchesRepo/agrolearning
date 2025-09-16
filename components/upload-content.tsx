@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Upload, X, FileVideo, CheckCircle, AlertCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { ExistingContent } from "@/components/existing-content"
 
 interface SelectedFile {
   file: File
@@ -488,6 +489,9 @@ export function UploadContent() {
           )}
         </CardContent>
       </Card>
+
+      {/* Existing Content */}
+      <ExistingContent />
     </div>
   )
 }
