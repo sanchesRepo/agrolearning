@@ -80,6 +80,13 @@ export async function POST(request: NextRequest) {
         
         const filePath = path.join(targetPath, fileName)
         await fs.writeFile(filePath, buffer)
+        
+        // Definir permissões corretas no arquivo
+        try {
+          await fs.chmod(filePath, 0o644)
+        } catch (chmodError) {
+          console.warn('Não foi possível definir permissões:', chmodError)
+        }
 
         savedFiles.push(fileName)
       } catch (error) {

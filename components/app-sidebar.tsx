@@ -15,14 +15,43 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import { ChevronRight, Wheat, Sprout, TreePine, Apple, ImageIcon, Home, BarChart3 } from "lucide-react"
+import { ChevronRight, Wheat, Sprout, TreePine, Apple, ImageIcon, Home, BarChart3, Settings, Cog, Wrench, Car } from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { CircularProgress, ProgressBadge } from "@/components/ui/progress-indicator"
 import { ThemeToggle } from "@/components/theme-toggle"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
+import { uploadSubjects } from "@/lib/upload-data"
 
-const subjects = [
+// Mapear ícones para cada assunto
+const subjectIcons = {
+  "goa": Settings,
+  "automotiva-mecanica": Car,
+  "tecnologia-agricola": Cog,
+  "producao-agricola": Wheat,
+}
+
+// Converter dados reais para formato da sidebar
+const subjects = uploadSubjects.map(subject => ({
+  title: subject.title,
+  slug: subject.slug,
+  icon: subjectIcons[subject.slug as keyof typeof subjectIcons] || Wheat,
+  progress: 0, // Por enquanto sem progresso
+  subSubjects: subject.subSubjects.map(subSubject => ({
+    name: subSubject.name,
+    slug: subSubject.slug,
+    progress: 0, // Por enquanto sem progresso
+    modules: subSubject.modules.map(module => ({
+      name: module.name,
+      slug: module.slug,
+      progress: 0, // Por enquanto sem progresso
+      contents: [], // Será preenchido dinamicamente
+    }))
+  }))
+}))
+
+// Manter dados antigos para referência (remover depois)
+const oldSubjects = [
   {
     title: "Agricultura",
     icon: Wheat,
@@ -243,7 +272,7 @@ const subjects = [
       },
     ],
   },
-]
+] // Fim dos dados antigos - pode ser removido depois
 
 export function AppSidebar() {
   const pathname = usePathname()
@@ -267,93 +296,33 @@ export function AppSidebar() {
 
   // Função para verificar se um assunto tem alguma rota ativa
   const hasActiveRoute = (subject: typeof subjects[0]): boolean => {
-    // Verificar se o assunto principal está ativo
-    if (isActiveRoute(`/assunto/${subject.title.toLowerCase()}`)) {
-      return true
-    }
-
-    // Verificar se algum sub-assunto está ativo
+    // Verificar se algum módulo/conteúdo está ativo usando a nova estrutura
     return subject.subSubjects.some(subSubject => {
-      // Verificar se o sub-assunto está ativo
-      if (isActiveRoute(`/assunto/${subject.title.toLowerCase()}/${subSubject.name.toLowerCase()}`)) {
-        return true
-      }
-
-      // Verificar se algum módulo/conteúdo está ativo
       return subSubject.modules.some(module => {
-        return module.contents.some((content, contentIndex) => {
-          let href = "#";
-          
-          // Usar a mesma lógica de mapeamento de rotas
-          if (subject.title === "Agricultura" && subSubject.name === "Plantio" && module.name === "Módulo 1") {
-            if (contentIndex === 0) href = "/modulo/agricultura/primavera/plantio";
-            else if (contentIndex === 1) href = "/conteudo/agricultura/primavera/plantio/preparacao-adequada-do-solo";
-            else if (contentIndex === 2) href = "/conteudo/agricultura/primavera/plantio/selecao-de-sementes-de-qualidade";
-            else if (contentIndex === 3) href = "/conteudo/agricultura/primavera/plantio/introducao-as-tecnicas-de-plantio";
-          }
-          else if (subject.title === "Agricultura" && subSubject.name === "Plantio" && module.name === "Módulo 2") {
-            href = "/modulo/agricultura/primavera/irrigacao";
-          }
-          else {
-            href = "/modulo/agricultura/primavera/plantio";
-          }
-          
-          return href !== "#" && isActiveRoute(href)
-        })
-      })
-    })
+        const moduleHref = `/modulo/${subject.slug}/${subSubject.slug}/${module.slug}`;
+        const contentHref = `/conteudo/${subject.slug}/${subSubject.slug}/${module.slug}`;
+        
+        return isActiveRoute(moduleHref) || pathname.startsWith(contentHref);
+      });
+    });
   }
 
   // Função para verificar se um sub-assunto tem alguma rota ativa
   const hasActiveSubRoute = (subject: typeof subjects[0], subSubject: typeof subjects[0]['subSubjects'][0]): boolean => {
-    // Verificar se o sub-assunto está ativo
-    if (isActiveRoute(`/assunto/${subject.title.toLowerCase()}/${subSubject.name.toLowerCase()}`)) {
-      return true
-    }
-
-    // Verificar se algum módulo/conteúdo está ativo
     return subSubject.modules.some(module => {
-      return module.contents.some((content, contentIndex) => {
-        let href = "#";
-        
-        if (subject.title === "Agricultura" && subSubject.name === "Plantio" && module.name === "Módulo 1") {
-          if (contentIndex === 0) href = "/modulo/agricultura/primavera/plantio";
-          else if (contentIndex === 1) href = "/conteudo/agricultura/primavera/plantio/preparacao-adequada-do-solo";
-          else if (contentIndex === 2) href = "/conteudo/agricultura/primavera/plantio/selecao-de-sementes-de-qualidade";
-          else if (contentIndex === 3) href = "/conteudo/agricultura/primavera/plantio/introducao-as-tecnicas-de-plantio";
-        }
-        else if (subject.title === "Agricultura" && subSubject.name === "Plantio" && module.name === "Módulo 2") {
-          href = "/modulo/agricultura/primavera/irrigacao";
-        }
-        else {
-          href = "/modulo/agricultura/primavera/plantio";
-        }
-        
-        return href !== "#" && isActiveRoute(href)
-      })
-    })
+      const moduleHref = `/modulo/${subject.slug}/${subSubject.slug}/${module.slug}`;
+      const contentHref = `/conteudo/${subject.slug}/${subSubject.slug}/${module.slug}`;
+      
+      return isActiveRoute(moduleHref) || pathname.startsWith(contentHref);
+    });
   }
 
   // Função para verificar se um módulo tem alguma rota ativa
   const hasActiveModuleRoute = (subject: typeof subjects[0], subSubject: typeof subjects[0]['subSubjects'][0], module: typeof subjects[0]['subSubjects'][0]['modules'][0]): boolean => {
-    return module.contents.some((content, contentIndex) => {
-      let href = "#";
-      
-      if (subject.title === "Agricultura" && subSubject.name === "Plantio" && module.name === "Módulo 1") {
-        if (contentIndex === 0) href = "/modulo/agricultura/primavera/plantio";
-        else if (contentIndex === 1) href = "/conteudo/agricultura/primavera/plantio/preparacao-adequada-do-solo";
-        else if (contentIndex === 2) href = "/conteudo/agricultura/primavera/plantio/selecao-de-sementes-de-qualidade";
-        else if (contentIndex === 3) href = "/conteudo/agricultura/primavera/plantio/introducao-as-tecnicas-de-plantio";
-      }
-      else if (subject.title === "Agricultura" && subSubject.name === "Plantio" && module.name === "Módulo 2") {
-        href = "/modulo/agricultura/primavera/irrigacao";
-      }
-      else {
-        href = "/modulo/agricultura/primavera/plantio";
-      }
-      
-      return href !== "#" && isActiveRoute(href)
-    })
+    const moduleHref = `/modulo/${subject.slug}/${subSubject.slug}/${module.slug}`;
+    const contentHref = `/conteudo/${subject.slug}/${subSubject.slug}/${module.slug}`;
+    
+    return isActiveRoute(moduleHref) || pathname.startsWith(contentHref);
   }
 
   return (
@@ -489,37 +458,15 @@ export function AppSidebar() {
                                         </SidebarMenuSubButton>
                                         <CollapsibleContent>
                                           <SidebarMenuSub className="ml-2">
-                                            {module.contents.map((content, contentIndex) => {
-                                              // Mapear para as rotas existentes baseadas na estrutura atual
-                                              let href = "#";
-                                              
-                                              // Para Agricultura -> Plantio -> Módulo 1, mapear para as páginas existentes
-                                              if (subject.title === "Agricultura" && subSubject.name === "Plantio" && module.name === "Módulo 1") {
-                                                if (contentIndex === 0) href = "/modulo/agricultura/primavera/plantio"; // Técnicas de Plantio
-                                                else if (contentIndex === 1) href = "/conteudo/agricultura/primavera/plantio/preparacao-adequada-do-solo"; // Preparação do Solo
-                                                else if (contentIndex === 2) href = "/conteudo/agricultura/primavera/plantio/selecao-de-sementes-de-qualidade"; // Seleção de Sementes
-                                                else if (contentIndex === 3) href = "/conteudo/agricultura/primavera/plantio/introducao-as-tecnicas-de-plantio"; // Cronograma de Plantio
-                                              }
-                                              // Para Agricultura -> Plantio -> Módulo 2 (mapear para irrigação)
-                                              else if (subject.title === "Agricultura" && subSubject.name === "Plantio" && module.name === "Módulo 2") {
-                                                href = "/modulo/agricultura/primavera/irrigacao"; // Página de irrigação
-                                              }
-                                              // Para outros assuntos e módulos, usar página padrão existente
-                                              else {
-                                                href = "/modulo/agricultura/primavera/plantio"; // Página padrão existente
-                                              }
-                                              
-                                              return (
-                                                <SidebarMenuSubItem key={content} className="my-0.5">
-                                                  <SidebarMenuSubButton asChild isActive={href !== "#" && isActiveRoute(href)}>
-                                                    <a href={href} className="flex items-start pl-2 py-1.5 rounded text-muted-foreground hover:text-foreground hover:bg-muted/20 transition-colors min-h-[24px]">
-                                                      <ImageIcon className="h-2 w-2 mr-2 mt-0.5 text-muted-foreground/60 flex-shrink-0" />
-                                                      <span className="text-xs leading-relaxed break-words">{content}</span>
-                                                    </a>
-                                                  </SidebarMenuSubButton>
-                                                </SidebarMenuSubItem>
-                                              );
-                                            })}
+                                            {/* Link para o módulo principal */}
+                                            <SidebarMenuSubItem className="my-0.5">
+                                              <SidebarMenuSubButton asChild isActive={isActiveRoute(`/modulo/${subject.slug}/${subSubject.slug}/${module.slug}`)}>
+                                                <a href={`/modulo/${subject.slug}/${subSubject.slug}/${module.slug}`} className="flex items-start pl-2 py-1.5 rounded text-muted-foreground hover:text-foreground hover:bg-muted/20 transition-colors min-h-[24px]">
+                                                  <ImageIcon className="h-2 w-2 mr-2 mt-0.5 text-muted-foreground/60 flex-shrink-0" />
+                                                  <span className="text-xs leading-relaxed break-words">Visão Geral do Módulo</span>
+                                                </a>
+                                              </SidebarMenuSubButton>
+                                            </SidebarMenuSubItem>
                                           </SidebarMenuSub>
                                         </CollapsibleContent>
                                       </SidebarMenuSubItem>
